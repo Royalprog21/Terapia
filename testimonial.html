@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Terapia - Testimonials & Ratings</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+    
+    <style>
+        .testimonial-with-rating {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .rating-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            padding: 40px;
+            margin: 20px 0;
+        }
+        .star {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 0 2px;
+        }
+        .star.active {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+        .star:hover {
+            color: #ffc107;
+            transform: scale(1.2);
+        }
+        .testimonial-rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        .testimonial-item {
+            transition: all 0.3s ease;
+        }
+        .testimonial-item:hover {
+            transform: translateY(-5px);
+        }
+        .rating-stats {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .progress {
+            height: 8px;
+            margin: 5px 0;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffc107;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Topbar & Navbar (keep your existing code) -->
+    <div class="container-fluid bg-dark px-5 d-none d-lg-block">
+        <!-- Your existing topbar -->
+    </div>
+
+    <div class="container-fluid position-relative p-0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white px-4 px-lg-5 py-3 py-lg-0">
+            <!-- Your existing navbar -->
+        </nav>
+    </div>
+    <!-- Navbar & Hero Start -->
+    <div class="container-fluid position-relative p-0 ">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white px-4 px-lg-5 py-3 py-lg-0">
+            <a href="index.html" class="navbar-brand p-0">
+                <h1 class="text-primary m-0"><i class="fas fa-star-of-life me-3"></i>Terapia</h1>
+                <!-- <img src="img/logo.png" alt="Logo"> -->
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <a href="dashboard.php" class="nav-item nav-link">Dashboard</a>
+                    <a href="home.html" class="nav-item nav-link">Home</a>
+                    <a href="about.html" class="nav-item nav-link">About</a>
+                    <a href="service.html" class="nav-item nav-link">Services</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="appointment.html" class="dropdown-item">Appointment</a>
+                            <a href="feature.html" class="dropdown-item active">Features</a>
+                            <a href="blog.html" class="dropdown-item">Our Blog</a>
+                            <a href="team.html" class="dropdown-item">Our Team</a>
+                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                            <a href="404.html" class="dropdown-item">404 Page</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link">Contact Us</a>
+                </div>
+                <a href="#" class="btn btn-primary rounded-pill text-white py-2 px-4 flex-wrap flex-sm-shrink-0">Book Appointment</a>
+                &nbsp; &nbsp;
+                <a href="assessment.html" class="btn btn-primary rounded-pill text-white py-2 px-4 flex-wrap flex-sm-shrink-0">Quick Assessment</a>
+
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid bg-breadcrumb">
+        <div class="container text-center py-5" style="max-width: 900px;">
+            <h3 class="text-white display-3 mb-4 wow fadeInDown" data-wow-delay="0.1s">Testimonials & Ratings</h1>
+            <ol class="breadcrumb justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+                <li class="breadcrumb-item"><a href="home.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Pages</a></li>
+                <li class="breadcrumb-item active text-primary">Testimonials</li>
+            </ol>    
+        </div>
+    </div>
+    <!-- Header End -->
+
+
+    <!-- Testimonials with Ratings Start -->
+    <div class="container-fluid testimonial-with-rating py-5">
+        <div class="container py-5">
+            <div class="section-title mb-5 text-center">
+                <div class="sub-style">
+                    <h4 class="sub-title text-white px-3 mb-0">Client Feedback</h4>
+                </div>
+                <h1 class="display-3 mb-4 text-white">What Our Clients Say</h1>
+                <p class="lead text-white">Real experiences from our patients</p>
+            </div>
+
+            <!-- Rating Statistics -->
+            <div class="row mb-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="rating-stats text-white text-center">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="stat-number">4.8</div>
+                                <div class="text-warning mb-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <small>Average Rating</small>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-number">1,247</div>
+                                <div><i class="fas fa-comments"></i></div>
+                                <small>Total Reviews</small>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-number">98%</div>
+                                <div><i class="fas fa-thumbs-up"></i></div>
+                                <small>Would Recommend</small>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="stat-number">4.9</div>
+                                <div><i class="fas fa-user-md"></i></div>
+                                <small>Doctor Rating</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rating Distribution -->
+            <div class="row mb-5">
+                <div class="col-lg-6 mx-auto">
+                    <div class="rating-card">
+                        <h4 class="text-center mb-4">Rating Distribution</h4>
+                        <div class="rating-bars">
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="me-2">5★</span>
+                                <div class="progress flex-grow-1">
+                                    <div class="progress-bar bg-warning" style="width: 75%"></div>
+                                </div>
+                                <span class="ms-2">75%</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="me-2">4★</span>
+                                <div class="progress flex-grow-1">
+                                    <div class="progress-bar bg-warning" style="width: 18%"></div>
+                                </div>
+                                <span class="ms-2">18%</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="me-2">3★</span>
+                                <div class="progress flex-grow-1">
+                                    <div class="progress-bar bg-warning" style="width: 5%"></div>
+                                </div>
+                                <span class="ms-2">5%</span>
+                            </div>
+                            <div class="d-flex align-items-center mb-2">
+                                <span class="me-2">2★</span>
+                                <div class="progress flex-grow-1">
+                                    <div class="progress-bar bg-warning" style="width: 1%"></div>
+                                </div>
+                                <span class="ms-2">1%</span>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2">1★</span>
+                                <div class="progress flex-grow-1">
+                                    <div class="progress-bar bg-warning" style="width: 1%"></div>
+                                </div>
+                                <span class="ms-2">1%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Testimonials Carousel with Ratings -->
+            <div class="testimonial-carousel owl-carousel">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-item">
+                    <div class="testimonial-inner p-5">
+                        <div class="testimonial-rating text-center mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-2 text-white">5.0</span>
+                        </div>
+                        <div class="testimonial-inner-img mb-4 text-center">
+                            <img src="img/testimonial-img.jpg" class="img-fluid rounded-circle" alt="John Abraham">
+                        </div>
+                        <p class="text-white fs-7 text-center">"For years, I lived with constant back pain. Before Terapia, I couldn't even bend over. Now, after their treatments, I'm pain-free and enjoying life again. The therapists are incredibly skilled and caring."</p>
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white">John Abraham</h5>
+                            <p class="mb-2 text-white-50">Back Pain Treatment • Rated Dr. Smith</p>
+                            <small class="text-white-50"><i class="fas fa-calendar me-1"></i> 2 weeks ago</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 2 -->
+                <div class="testimonial-item">
+                    <div class="testimonial-inner p-5">
+                        <div class="testimonial-rating text-center mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <span class="ms-2 text-white">5.0</span>
+                        </div>
+                        <div class="testimonial-inner-img mb-4 text-center">
+                            <img src="img/testimonial-img.jpg" class="img-fluid rounded-circle" alt="Joy Gacheri">
+                        </div>
+                        <p class="text-white fs-7 text-center">"After my surgery, I was worried about regaining my mobility. Terapia made all the difference. Their therapists were patient and encouraging, and their personalized exercises helped me recover faster than I expected."</p>
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white">Joy Gacheri</h5>
+                            <p class="mb-2 text-white-50">Post-Surgical Rehab • Rated Dr. Johnson</p>
+                            <small class="text-white-50"><i class="fas fa-calendar me-1"></i> 1 month ago</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Testimonial 3 -->
+                <div class="testimonial-item">
+                    <div class="testimonial-inner p-5">
+                        <div class="testimonial-rating text-center mb-3">
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star text-warning"></i>
+                            <i class="fas fa-star-half-alt text-warning"></i>
+                            <span class="ms-2 text-white">4.5</span>
+                        </div>
+                        <div class="testimonial-inner-img mb-4 text-center">
+                            <img src="img/testimonial-img.jpg" class="img-fluid rounded-circle" alt="Sam Mtuku">
+                        </div>
+                        <p class="text-white fs-7 text-center">"A work injury had me worried about my future job security. Terapia helped me get back to work safely and quickly. Their team was very knowledgeable and helped me every step of the way."</p>
+                        <div class="text-center">
+                            <h5 class="mb-2 text-white">Sam Mtuku</h5>
+                            <p class="mb-2 text-white-50">Work Injury • Rated Dr. Chen</p>
+                            <small class="text-white-50"><i class="fas fa-calendar me-1"></i> 3 days ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Your Rating Section -->
+            <div class="row mt-5">
+                <div class="col-lg-8 mx-auto">
+                    <div class="rating-card">
+                        <div class="text-center mb-4">
+                            <h3>Share Your Experience</h3>
+                            <p class="text-muted">Help others by sharing your Terapia experience</p>
+                        </div>
+                        
+        <form method="POST" action="backend/submit_testimonial.php">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="patient-name" class="form-label">Your Name</label>
+                                    <input type="text" class="form-control" id="patient-name" name="name" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="treatment-type" class="form-label">Treatment Type</label>
+                                    <select class="form-select" id="treatment-type" name="treatment_type">
+                                        <option value="">Select Treatment</option>
+                                        <option value="physiotherapy">Physiotherapy</option>
+                                        <option value="back-pain">Back Pain</option>
+                                        <option value="sports-injury">Sports Injury</option>
+                                        <option value="post-surgical">Post-Surgical Rehab</option>
+                                        <option value="massage">Massage Therapy</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Overall Rating</label>
+                                <div class="text-center">
+                                    <div class="d-flex justify-content-center mb-2" id="testimonial-rating-stars">
+                                        <i class="fas fa-star star" data-value="1"></i>
+                                        <i class="fas fa-star star" data-value="2"></i>
+                                        <i class="fas fa-star star" data-value="3"></i>
+                                        <i class="fas fa-star star" data-value="4"></i>
+                                        <i class="fas fa-star star" data-value="5"></i>
+                                    </div>
+                                    <div id="rating-description" class="text-muted small">Tap stars to rate</div>
+                                </div>
+                                <input type="hidden" id="testimonial-rating" name="rating" value="0">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="testimonial-text" class="form-label">Your Testimonial</label>
+                                <textarea class="form-control" id="testimonial-text" name="testimonial" 
+                                         rows="4" placeholder="Share your experience with Terapia..." required></textarea>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="doctor-select" class="form-label">Doctor (Optional)</label>
+                                <select class="form-select" id="doctor-select" name="doctor_id">
+                                    <option value="">Select Doctor</option>
+                                    <option value="1">Dr. John Smith</option>
+                                    <option value="2">Dr. Sarah Johnson</option>
+                                    <option value="3">Dr. Mike Chen</option>
+                                    <option value="4">Dr. Emily Davis</option>
+                                </select>
+                            </div>
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" id="consent-check" required>
+                                <label class="form-check-label" for="consent-check">
+                                    I consent to having my testimonial displayed on the Terapia website
+                                </label>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg" id="submit-testimonial" disabled>
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Testimonial
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="testimonial-thank-you" class="text-center mt-4" style="display: none;">
+                            <div class="alert alert-success">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Thank you for sharing your experience! Your testimonial will be reviewed before publishing.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Testimonials with Ratings End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid footer py-5 wow fadeIn" data-wow-delay="0.2s">
+        <!-- Your existing footer -->
+    </div>
+    <!-- Footer End -->
+
+    <script>
+        // Testimonial Rating System
+        document.addEventListener('DOMContentLoaded', function() {
+            let testimonialRating = 0;
+            const stars = document.querySelectorAll('#testimonial-rating-stars .star');
+            const ratingDescription = document.getElementById('rating-description');
+            const submitBtn = document.getElementById('submit-testimonial');
+
+            const ratingTexts = {
+                0: "Tap stars to rate",
+                1: "Poor - Very dissatisfied",
+                2: "Fair - Could be better",
+                3: "Good - Met expectations",
+                4: "Very Good - Exceeded expectations",
+                5: "Excellent - Outstanding experience"
+            };
+
+            // Star rating functionality
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    testimonialRating = parseInt(this.getAttribute('data-value'));
+                    updateStars(testimonialRating);
+                    ratingDescription.textContent = ratingTexts[testimonialRating];
+                    updateSubmitButton();
+                });
+
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(this.getAttribute('data-value'));
+                    updateStars(rating);
+                    ratingDescription.textContent = ratingTexts[rating];
+                });
+            });
+
+            document.getElementById('testimonial-rating-stars').addEventListener('mouseleave', function() {
+                updateStars(testimonialRating);
+                ratingDescription.textContent = ratingTexts[testimonialRating];
+            });
+
+            function updateStars(rating) {
+                stars.forEach(star => {
+                    if (parseInt(star.getAttribute('data-value')) <= rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+                document.getElementById('testimonial-rating').value = rating;
+            }
+
+            function updateSubmitButton() {
+                const name = document.getElementById('patient-name').value;
+                const testimonial = document.getElementById('testimonial-text').value;
+                const consent = document.getElementById('consent-check').checked;
+                
+                submitBtn.disabled = !(name && testimonial && consent && testimonialRating > 0);
+            }
+
+            // Form validation
+            document.getElementById('patient-name').addEventListener('input', updateSubmitButton);
+            document.getElementById('testimonial-text').addEventListener('input', updateSubmitButton);
+            document.getElementById('consent-check').addEventListener('change', updateSubmitButton);
+
+            // Form submission
+            document.getElementById('testimonial-rating-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Show loading state
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+                submitBtn.disabled = true;
+
+                // Simulate API call
+                setTimeout(() => {
+                    // Here you would send data to your backend
+                    const formData = {
+                        name: document.getElementById('patient-name').value,
+                        rating: testimonialRating,
+                        testimonial: document.getElementById('testimonial-text').value,
+                        treatment_type: document.getElementById('treatment-type').value,
+                        doctor_id: document.getElementById('doctor-select').value
+                    };
+                    
+                    console.log('Submitting testimonial:', formData);
+                    
+                    // Show success message
+                    document.getElementById('testimonial-rating-form').style.display = 'none';
+                    document.getElementById('testimonial-thank-you').style.display = 'block';
+                    
+                }, 2000);
+            });
+        });
+    </script>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+</html>

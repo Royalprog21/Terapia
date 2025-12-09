@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Contact Us - Terapia Physical Therapy</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet"> 
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/animate/animate.min.css" rel="stylesheet">
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+
+    <style>
+        /* Enhanced Contact Styles */
+        .contact-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="1000,100 1000,0 0,100"></polygon></svg>');
+            background-size: cover;
+        }
+
+        .contact-form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-info-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .form-floating label {
+            padding: 15px 20px;
+            color: #6c757d;
+        }
+
+        .form-floating>.form-control:focus~label {
+            color: #667eea;
+        }
+
+        /* Enhanced Buttons */
+        .btn-contact {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-contact:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        .btn-contact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-contact:hover::before {
+            left: 100%;
+        }
+
+        /* Contact Info Items */
+        .contact-info-item {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-info-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px auto;
+            font-size: 2rem;
+        }
+
+        /* Map Styling */
+        .map-container {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+        }
+
+        /* Social Links */
+        .social-links .btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-links .btn:hover {
+            transform: translateY(-3px) scale(1.1);
+        }
+
+        /* Social Brand Colors */
+        .social-links .btn-facebook:hover, .btn-facebook:hover { background: #3b5998; color: white; }
+        .social-links .btn-twitter:hover, .btn-twitter:hover { background: #1da1f2; color: white; }
+        .social-links .btn-instagram:hover, .btn-instagram:hover { background: #e1306c; color: white; }
+        .social-links .btn-linkedin:hover, .btn-linkedin:hover { background: #0077b5; color: white; }
+
+        /* Alert Messages */
+        .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 15px 20px;
+        }
+
+        /* Loading Animation */
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .contact-form-card {
+                padding: 25px;
+                margin-bottom: 30px;
+            }
+            
+            .contact-info-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Topbar Start -->
+    <div class="container-fluid bg-dark px-5 d-none d-lg-block">
+        <div class="row gx-0 align-items-center" style="height: 45px;">
+            <div class="col-lg-8 text-center text-lg-start mb-lg-0">
+                <div class="d-flex flex-wrap">
+                    <a href="#" class="text-light me-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>Find A Location</a>
+                    <a href="#" class="text-light me-4"><i class="fas fa-phone-alt text-primary me-2"></i>254784567890</a>
+                    <a href="#" class="text-light me-0"><i class="fas fa-envelope text-primary me-2"></i>Terapia@gmail.com</a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center text-lg-end">
+                <div class="d-flex align-items-center justify-content-end">
+                    <a href="https://www.facebook.com/sharer.php?u=https://terapia.com" target="_blank" class="btn btn-light btn-square border rounded-circle nav-fill me-3 btn-facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com/share?url=https://terapia.com&text=Check%20out%20Terapia!" target="_blank" class="btn btn-light btn-square border rounded-circle nav-fill me-3 btn-twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/terapia_official/" target="_blank" class="btn btn-light btn-square border rounded-circle nav-fill me-3 btn-instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://terapia.com" target="_blank" class="btn btn-light btn-square border rounded-circle nav-fill me-0 btn-linkedin"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Topbar End -->
+
+    <!-- Navbar & Hero Start -->
+    <div class="container-fluid position-relative p-0">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white px-4 px-lg-5 py-3 py-lg-0">
+            <a href="index.html" class="navbar-brand p-0">
+                <h1 class="text-primary m-0"><i class="fas fa-star-of-life me-3"></i>Terapia</h1>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-0">
+                    <a href="dashboard.php" class="nav-item nav-link">Dashboard</a>
+                    <a href="home.html" class="nav-item nav-link">Home</a>
+                    <a href="about.html" class="nav-item nav-link">About</a>
+                    <a href="service.html" class="nav-item nav-link">Services</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0">
+                            <a href="appointment.html" class="dropdown-item">Appointment</a>
+                            <a href="feature.html" class="dropdown-item">Features</a>
+                            <a href="blog.html" class="dropdown-item">Our Blog</a>
+                            <a href="team.html" class="dropdown-item">Our Team</a>
+                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                            <a href="404.html" class="dropdown-item">404 Page</a>
+                        </div>
+                    </div>
+                    <a href="contact.html" class="nav-item nav-link active">Contact Us</a>
+                </div>
+                <a href="appointment.html" class="btn btn-primary rounded-pill text-white py-2 px-4 flex-wrap flex-sm-shrink-0">Book Appointment</a>
+                               &nbsp; &nbsp;
+                    <a href="assessment.html" class="btn btn-primary rounded-pill text-white py-2 px-4 flex-wrap flex-sm-shrink-0">Quick Assessment</a>
+
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Hero Section -->
+    <div class="contact-hero">
+        <div class="container text-center position-relative">
+            <h1 class="display-3 mb-4 wow fadeInDown" data-wow-delay="0.1s">Get In Touch</h1>
+            <p class="lead mb-4 wow fadeInDown" data-wow-delay="0.2s">We're here to help you on your journey to better health</p>
+            <ol class="breadcrumb justify-content-center mb-0 wow fadeInDown" data-wow-delay="0.3s">
+                <li class="breadcrumb-item"><a href="index.html" class="text-white">Home</a></li>
+                <li class="breadcrumb-item active text-light">Contact</li>
+            </ol>    
+        </div>
+    </div>
+    <!-- Hero End -->
+
+    <!-- Contact Section -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <!-- Contact Form -->
+                <div class="col-lg-7">
+                    <div class="contact-form-card wow fadeInLeft" data-wow-delay="0.1s">
+                        <div class="section-title mb-4">
+                            <div class="sub-style mb-3">
+                                <h4 class="sub-title text-primary px-3 mb-0">Send Message</h4>
+                            </div>
+                            <h2 class="display-6 mb-3">Ready to Start Your Healing Journey?</h2>
+                            <p class="text-muted">Fill out the form below and our team will get back to you within 24 hours.</p>
+                        </div>
+                        
+                        <!-- Alert Messages -->
+                        <div id="form-alert" style="display: none;"></div>
+
+                        <form id="contactForm" novalidate>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
+                                        <label for="name">Your Name *</label>
+                                        <div class="invalid-feedback">Please enter your name.</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
+                                        <label for="email">Your Email *</label>
+                                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Tell us how we can help you..." id="message" name="message" style="height: 150px" required></textarea>
+                                        <label for="message">Your Message *</label>
+                                        <div class="invalid-feedback">Please enter your message.</div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-contact w-100 py-3" id="submitBtn">
+                                        <span class="submit-text">Send Message</span>
+                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display: none;"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="col-lg-5">
+                    <div class="contact-info-card wow fadeInRight" data-wow-delay="0.1s">
+                        <div class="section-title mb-5">
+                            <h2 class="text-white mb-3">Contact Information</h2>
+                            <p class="text-light">Reach out to us through any of these channels</p>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h4 class="text-white mb-2">Our Location</h4>
+                            <p class="mb-0 text-light">123 Healing Street, Wellness City</p>
+                            <p class="mb-0 text-light">New York, NY 10001, USA</p>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <h4 class="text-white mb-2">Phone Numbers</h4>
+                            <p class="mb-1 text-light">+254 (555) 123-HEAL</p>
+                            <p class="mb-0 text-light">+254 (555) 123-HELP</p>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h4 class="text-white mb-2">Email Address</h4>
+                            <p class="mb-1 text-light">info@terapia.com</p>
+                            <p class="mb-0 text-light">support@terapia.com</p>
+                        </div>
+
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h4 class="text-white mb-2">Business Hours</h4>
+                            <p class="mb-1 text-light">Mon-Fri: 8:00 AM - 8:00 PM</p>
+                            <p class="mb-0 text-light">Sat: 9:00 AM - 4:00 PM</p>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="text-center mt-4">
+                            <h5 class="text-white mb-3">Follow Us</h5>
+                            <div class="social-links d-flex justify-content-center">
+                                <a href="https://www.facebook.com/sharer.php?u=https://terapia.com" target="_blank" class="btn btn-light btn-square mx-2 btn-facebook"><i class="fab fa-facebook-f"></i></a>
+                                <a href="https://twitter.com/share?url=https://terapia.com&text=Check%20out%20Terapia!" target="_blank" class="btn btn-light btn-square mx-2 btn-twitter"><i class="fab fa-twitter"></i></a>
+                                <a href="https://www.instagram.com/terapia_official/" target="_blank" class="btn btn-light btn-square mx-2 btn-instagram"><i class="fab fa-instagram"></i></a>
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://terapia.com" target="_blank" class="btn btn-light btn-square mx-2 btn-linkedin"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Map -->
+            <div class="row mt-5">
+                <div class="col-12 map-container">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18..." style="width:100%; height:450px; border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6">
+                    <h4 class="text-white mb-4">About Terapia</h4>
+                    <p class="mb-4">Your partner in physical rehabilitation and wellness.</p>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-share fa-2x text-white me-2"></i>
+                        <a href="https://www.facebook.com/sharer.php?u=https://terapia.com" target="_blank" class="btn-square btn btn-light text-white rounded-circle mx-1 btn-facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://twitter.com/share?url=https://terapia.com&text=Check%20out%20Terapia!" target="_blank" class="btn-square btn btn-light text-white rounded-circle mx-1 btn-twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://www.instagram.com/terapia_official/" target="_blank" class="btn-square btn btn-light text-white rounded-circle mx-1 btn-instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://terapia.com" target="_blank" class="btn-square btn btn-light text-white rounded-circle mx-1 btn-linkedin"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-lg-end mt-4 mt-lg-0">
+                    <p class="mb-0">&copy; 2025 Terapia. All Rights Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="lib/wow/wow.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+</body>
+
+</html>

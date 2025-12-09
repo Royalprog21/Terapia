@@ -1,0 +1,595 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>AI Body Movement Analyzer — MoveNet Assessment</title>
+
+  <!-- TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+
+  <!-- Pose Detection API -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/pose-detection@2.0.0"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    #wrap {
+      position: relative;
+      width: 640px;
+    }
+    video {
+      width: 540px;
+      height: 480px;
+      background: #000;
+      border-radius: 10px;
+    }
+    canvas{
+      width: 540px;
+      height: 480px;
+      background: #000;
+      border-radius: 10px;
+      position: absolute;
+      right: -820px;
+      top: 5px;
+    }
+    #feedback {
+      margin-top: 12px;
+      padding: 10px;
+      background: #111;
+      color: #0f0;
+      border-radius: 6px;
+      font-weight: 600;
+      position: relative;
+      left: 430px;
+      text-align: center;
+    }
+    #controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      position: relative;
+      top: 150px;
+      height: fit-content;
+      width: 350px;
+      left: -105px;
+      /* align-items: center; */
+    }
+    #controls small{
+      text-align: center;
+    }
+    button {
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      background: #333;
+      color: white;
+    }
+    button:disabled {
+      background: #777;
+    }
+    select {
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    a{
+      position: relative;
+      top: 600px;
+      left: 150px;
+      width: 180px;
+      height: 30px;
+      background-color: #000;
+      color: #0f0;
+      border-radius: 20px;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="wrap">
+    <video id="video" autoplay playsinline muted></video>
+    <canvas id="overlay"></canvas>
+    <div id="feedback">Press START to begin your assessment.</div>
+  </div>
+
+  <div id="controls">
+    <button id="startBtn">Start Assessment</button>
+    <button id="stopBtn" disabled>Stop</button>
+
+    <select id="exercise">
+      <option value="squat">Squat</option>
+      <option value="neck">Neck Posture</option>
+      <option value="shoulder">Shoulder Alignment</option>
+      <option value="back">Back Posture (Pain Assessment)</option>
+      <option value="leg">Leg Straight Alignment</option>
+      <option value="lunge">Lunge (coming soon)</option>
+      <option value="plank">Plank (coming soon)</option>
+    </select>
+
+    <small>All processing happens locally in your browser. Nothing is uploaded.</small>
+  </div>
+
+  <a class="btn btn-primary rounded-pill py-3 px-5" href="home.html"><b>Go Back To Home</b></a>
+
+
+<script>
+(async function(){
+
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("overlay");
+  const ctx = canvas.getContext("2d");
+  canvas.width = 640;
+  canvas.height = 480;
+
+  let detector = null;
+  let running = false;
+  let rafID = null;
+  
+  // Add message stability variables
+  let lastFeedbackTime = 0;
+  let currentFeedback = "Press START to begin your assessment.";
+  let currentScore = 0;
+  const FEEDBACK_DELAY = 2000; // 2 seconds in milliseconds
+
+  // Angle helper function
+  function angle(A, B, C) {
+    const AB = [A.x - B.x, A.y - B.y];
+    const CB = [C.x - B.x, C.y - B.y];
+    const dot = AB[0] * CB[0] + AB[1] * CB[1];
+    const magAB = Math.hypot(AB[0], AB[1]);
+    const magCB = Math.hypot(CB[0], CB[1]);
+    if(magAB * magCB === 0) return 0;
+    const cos = dot / (magAB * magCB);
+    return Math.acos(Math.max(-1, Math.min(1, cos))) * 180/Math.PI;
+  }
+
+  function drawKeypoints(keypoints) {
+    ctx.clearRect(0,0,640,480);
+
+    keypoints.forEach(k => {
+      if(k.score > 0.35){
+        ctx.beginPath();
+        ctx.arc(k.x * 640, k.y * 480, 5, 0, Math.PI*2);
+        ctx.fillStyle = "#00ffff";
+        ctx.fill();
+      }
+    });
+  }
+
+  // Squat analyzer
+  function analyzeSquat(keypoints) {
+    const kp = {};
+    keypoints.forEach(k => kp[k.name] = k);
+
+    // Check if knee, hip, AND shoulder are visible
+    const requiredPoints = [
+      { name: 'left_knee', point: kp.left_knee },
+      { name: 'right_knee', point: kp.right_knee },
+      { name: 'left_hip', point: kp.left_hip },
+      { name: 'right_hip', point: kp.right_hip },
+      { name: 'left_shoulder', point: kp.left_shoulder },
+      { name: 'right_shoulder', point: kp.right_shoulder }
+    ];
+
+    // Check visibility with confidence score
+    const missingPoints = requiredPoints.filter(p => !p.point || p.point.score < 0.35);
+    
+    if(missingPoints.length > 0) {
+      return { ok:false, msg:"❌ Position yourself so knees, hips, and shoulders are visible" };
+    }
+
+    const knee = { x:(kp.left_knee.x + kp.right_knee.x)/2, y:(kp.left_knee.y + kp.right_knee.y)/2 };
+    const hip  = { x:(kp.left_hip.x + kp.right_hip.x)/2,  y:(kp.left_hip.y + kp.right_hip.y)/2 };
+    const ankle= { x:(kp.left_ankle.x + kp.right_ankle.x)/2, y:(kp.left_ankle.y + kp.right_ankle.y)/2 };
+
+    const kneeAngle = angle(hip, knee, ankle);  // ~90 = deep squat
+
+    let msg = "";
+    let score = 100;
+
+    if(kneeAngle > 120){
+      msg += "Go lower. ";
+      score -= 40;
+    }
+
+    if(score > 90) msg = "Great squat! Keep it up.";
+
+    return {
+      ok: true,
+      score,
+      msg,
+      kneeAngle: Math.round(kneeAngle)
+    };
+  }
+
+  // Neck posture analyzer - STRICT VERSION
+  function analyzeNeck(keypoints) {
+    const kp = {};
+    keypoints.forEach(k => kp[k.name] = k);
+
+    // Check if ear and shoulder are visible
+    const requiredPoints = [
+      { name: 'left_ear', point: kp.left_ear },
+      { name: 'right_ear', point: kp.right_ear },
+      { name: 'left_shoulder', point: kp.left_shoulder },
+      { name: 'right_shoulder', point: kp.right_shoulder }
+    ];
+
+    // Check visibility with confidence score
+    const missingPoints = requiredPoints.filter(p => !p.point || p.point.score < 0.15);
+    
+    if(missingPoints.length > 0) {
+      return { ok:false, msg:"❌ Position yourself so ears and shoulders are visible (face the camera directly)" };
+    }
+
+    const ear = { x:(kp.left_ear.x + kp.right_ear.x)/2, y:(kp.left_ear.y + kp.right_ear.y)/2 };
+    const shoulder = { x:(kp.left_shoulder.x + kp.right_shoulder.x)/2, y:(kp.left_shoulder.y + kp.right_shoulder.y)/2 };
+
+    // Calculate the angle from vertical (0° = perfectly straight)
+    // deltaX represents left/right tilt
+    // deltaY represents vertical distance
+    const deltaX = ear.x - shoulder.x;
+    const deltaY = shoulder.y - ear.y; // Flip so positive Y goes up
+    
+    // atan2 gives angle from vertical when we use (deltaX, deltaY)
+    // 0° = straight up, positive = left tilt, negative = right tilt
+    const neckAngle = Math.atan2(deltaX, deltaY) * 180 / Math.PI;
+    const absAngle = Math.abs(neckAngle);
+
+    let msg = "";
+    let score = 100;
+
+    // Perfect alignment is between -3° and +3° from vertical (0°)
+    if(absAngle <= 3) {
+      msg = "✓ Perfect neck alignment!";
+    } else {
+      if(neckAngle > 0) {
+        msg += `Neck tilted LEFT by ${Math.round(absAngle)}°. Straighten it! `;
+      } else {
+        msg += `Neck tilted RIGHT by ${Math.round(absAngle)}°. Straighten it! `;
+      }
+      score -= Math.min(50, absAngle * 5);
+    }
+
+    return {
+      ok: true,
+      score,
+      msg,
+      neckAngle: Math.round(neckAngle),
+      deviation: Math.round(absAngle)
+    };
+  }
+
+ // Shoulder alignment analyzer
+function analyzeShoulder(keypoints) {
+  const kp = {};
+  keypoints.forEach(k => kp[k.name] = k);
+
+  // Check if lower body is visible but shoulders/arms aren't
+  const hasLowerBody = (kp.left_hip || kp.right_hip || kp.left_knee || kp.right_knee);
+  const hasUpperBody = (kp.left_shoulder && kp.right_shoulder && kp.left_elbow && kp.right_elbow);
+
+  if(hasLowerBody && !hasUpperBody) {
+    return { ok:false, msg:"❌ You selected SHOULDER assessment! Put your FACE and SHOULDERS in front of camera" };
+  }
+
+  if(!kp.left_shoulder || !kp.right_shoulder || !kp.left_elbow || !kp.right_elbow) {
+    return { ok:false, msg:"❌ Face the camera with arms visible" };
+  }
+
+    // Check shoulder levelness
+    const leftShoulder = kp.left_shoulder;
+    const rightShoulder = kp.right_shoulder;
+    const shoulderDiff = Math.abs(leftShoulder.y - rightShoulder.y);
+
+    // Check for rounded shoulders (elbows forward of shoulders)
+    const leftElbow = kp.left_elbow;
+    const rightElbow = kp.right_elbow;
+    const leftRounded = leftElbow.x < leftShoulder.x;
+    const rightRounded = rightElbow.x > rightShoulder.x;
+
+    let msg = "";
+    let score = 100;
+
+    if(shoulderDiff > 0.05) {
+      msg += "Shoulders uneven. Balance them. ";
+      score -= 25;
+    }
+
+    if(leftRounded || rightRounded) {
+      msg += "Rounded shoulders detected. Pull shoulders back. ";
+      score -= 30;
+    }
+
+    if(score > 85) msg = "Good shoulder alignment!";
+
+    return {
+      ok: true,
+      score,
+      msg,
+      shoulderDiff: Math.round(shoulderDiff * 100)
+    };
+  }
+
+  // Back pain analyzer
+  function analyzeBack(keypoints) {
+    const kp = {};
+    keypoints.forEach(k => kp[k.name] = k);
+
+    // Check if only face is visible (ears/nose but no body)
+    const hasFace = (kp.left_ear || kp.right_ear || kp.nose);
+    const hasBody = (kp.left_shoulder && kp.right_shoulder && 
+                     kp.left_hip && kp.right_hip &&
+                     kp.left_knee && kp.right_knee);
+
+    if(hasFace && !hasBody) {
+      return { ok:false, msg:"❌ You selected BACK assessment! Show your FULL BODY sideways, not just your face!" };
+    }
+
+    // Need these keypoints
+    if(!kp.left_shoulder || !kp.right_shoulder || 
+       !kp.left_hip || !kp.right_hip ||
+       !kp.left_knee || !kp.right_knee) {
+      return { ok:false, msg:"❌ Stand SIDEWAYS to camera (show your profile)" };
+    }
+
+    const shoulder = { x:(kp.left_shoulder.x + kp.right_shoulder.x)/2, 
+                       y:(kp.left_shoulder.y + kp.right_shoulder.y)/2 };
+    const hip = { x:(kp.left_hip.x + kp.right_hip.x)/2, 
+                  y:(kp.left_hip.y + kp.right_hip.y)/2 };
+    const knee = { x:(kp.left_knee.x + kp.right_knee.x)/2, 
+                   y:(kp.left_knee.y + kp.right_knee.y)/2 };
+
+    let msg = "";
+    let score = 100;
+    let issues = [];
+
+    // 1. Check for excessive lower back arch (anterior pelvic tilt)
+    const hipToKneeX = hip.x - knee.x;
+    const shoulderToHipX = shoulder.x - hip.x;
+    
+    if(hipToKneeX < -0.05) { // Hips too far forward
+      issues.push("Lower back over-arched");
+      score -= 25;
+    }
+
+    // 2. Check for upper back rounding (kyphosis)
+    if(shoulderToHipX < -0.08) { // Shoulders too far forward
+      issues.push("Upper back rounded");
+      score -= 25;
+    }
+
+    // 3. Check for flat back (posterior pelvic tilt)
+    if(hipToKneeX > 0.05) { // Hips too far back
+      issues.push("Pelvis tilted back");
+      score -= 20;
+    }
+
+    // 4. Check shoulder-hip alignment (should be relatively vertical)
+    const backAngle = Math.atan2(shoulderToHipX, shoulder.y - hip.y) * 180 / Math.PI;
+    const absBackAngle = Math.abs(backAngle);
+    
+    if(absBackAngle > 15) {
+      issues.push(`Spine leaning ${backAngle > 0 ? 'forward' : 'backward'} ${Math.round(absBackAngle)}°`);
+      score -= 20;
+    }
+
+    // Build message
+    if(issues.length === 0) {
+      msg = "✓ Good back alignment! Low back pain risk.";
+    } else {
+      msg = "⚠ Back issues: " + issues.join(", ") + ". Adjust posture!";
+    }
+
+    return {
+      ok: true,
+      score,
+      msg,
+      issues
+    };
+  }
+
+  // Leg straight alignment analyzer
+  function analyzeLegAlignment(keypoints) {
+    const kp = {};
+    keypoints.forEach(k => kp[k.name] = k);
+
+    // Check if full leg is visible
+    const requiredPoints = [
+      { name: 'left_hip', point: kp.left_hip },
+      { name: 'right_hip', point: kp.right_hip },
+      { name: 'left_knee', point: kp.left_knee },
+      { name: 'right_knee', point: kp.right_knee },
+      { name: 'left_ankle', point: kp.left_ankle },
+      { name: 'right_ankle', point: kp.right_ankle }
+    ];
+
+    const missingPoints = requiredPoints.filter(p => !p.point || p.point.score < 0.35);
+    
+    if(missingPoints.length > 0) {
+      return { ok:false, msg:"❌ Stand facing the camera with full legs visible (hips to ankles)" };
+    }
+
+    // Calculate angles for both legs
+    const leftKneeAngle = angle(kp.left_hip, kp.left_knee, kp.left_ankle);
+    const rightKneeAngle = angle(kp.right_hip, kp.right_knee, kp.right_ankle);
+    
+    // Check lateral alignment (knee deviation from hip-ankle line)
+    // Positive = knock-kneed (valgus), Negative = bow-legged (varus)
+    const leftHipAnkleX = (kp.left_hip.x + kp.left_ankle.x) / 2;
+    const rightHipAnkleX = (kp.right_hip.x + kp.right_ankle.x) / 2;
+    
+    const leftDeviation = (kp.left_knee.x - leftHipAnkleX) * 100; // Convert to percentage
+    const rightDeviation = (kp.right_knee.x - rightHipAnkleX) * 100;
+
+    let msg = "";
+    let score = 100;
+    let issues = [];
+
+    // Check if legs are straight (170-180° is normal standing)
+    if(leftKneeAngle < 170) {
+      issues.push(`Left knee bent ${Math.round(180 - leftKneeAngle)}°`);
+      score -= 20;
+    }
+    if(rightKneeAngle < 170) {
+      issues.push(`Right knee bent ${Math.round(180 - rightKneeAngle)}°`);
+      score -= 20;
+    }
+
+    // Check lateral alignment
+    const leftAbsDev = Math.abs(leftDeviation);
+    const rightAbsDev = Math.abs(rightDeviation);
+    
+    if(leftAbsDev > 3) {
+      if(leftDeviation > 0) {
+        issues.push(`Left knee bowing IN (knock-knee)`);
+      } else {
+        issues.push(`Left knee bowing OUT (bow-legged)`);
+      }
+      score -= 20;
+    }
+    
+    if(rightAbsDev > 3) {
+      if(rightDeviation > 0) {
+        issues.push(`Right knee bowing IN (knock-knee)`);
+      } else {
+        issues.push(`Right knee bowing OUT (bow-legged)`);
+      }
+      score -= 20;
+    }
+
+    // Check symmetry
+    const kneeAngleDiff = Math.abs(leftKneeAngle - rightKneeAngle);
+    if(kneeAngleDiff > 5) {
+      issues.push(`Legs asymmetric (${Math.round(kneeAngleDiff)}° difference)`);
+      score -= 15;
+    }
+
+    // Build message
+    if(issues.length === 0) {
+      msg = "✓ Excellent leg alignment! Both legs are straight and properly aligned.";
+    } else {
+      msg = "⚠ Leg alignment issues: " + issues.join(", ") + ". Stand straighter!";
+    }
+
+    return {
+      ok: true,
+      score,
+      msg,
+      leftKneeAngle: Math.round(leftKneeAngle),
+      rightKneeAngle: Math.round(rightKneeAngle),
+      issues
+    };
+  }
+
+  async function loadModel(){
+    await tf.setBackend('webgl');
+    await tf.ready();
+    const model = poseDetection.SupportedModels.MoveNet;
+    detector = await poseDetection.createDetector(model, {
+      modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING
+    });
+  }
+
+  async function startVideo() {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 640, height: 480 },
+      audio: false
+    });
+    video.srcObject = stream;
+    await video.play();
+  }
+
+  async function render() {
+    if(!running) return;
+
+    const poses = await detector.estimatePoses(video, {
+      maxPoses: 1,
+      flipHorizontal: true
+    });
+
+    if(poses.length > 0) {
+      const kp = poses[0].keypoints.map(k => ({
+        name: k.name,
+        x: k.x / video.videoWidth,
+        y: k.y / video.videoHeight,
+        score: k.score
+      }));
+
+      drawKeypoints(kp);
+
+      let analysis = null;
+      const exerciseType = document.getElementById("exercise").value;
+      
+      if(exerciseType === "squat") {
+        analysis = analyzeSquat(kp);
+      } else if(exerciseType === "neck") {
+        analysis = analyzeNeck(kp);
+      } else if(exerciseType === "shoulder") {
+        analysis = analyzeShoulder(kp);
+      } else if(exerciseType === "back") {
+        analysis = analyzeBack(kp);
+      } else if(exerciseType === "leg") {
+        analysis = analyzeLegAlignment(kp);
+      }
+
+      // Only update feedback every 5 seconds
+      const currentTime = Date.now();
+      if(currentTime - lastFeedbackTime >= FEEDBACK_DELAY) {
+        if(analysis?.ok) {
+          currentFeedback = `${analysis.msg} (Score: ${analysis.score})`;
+          currentScore = analysis.score;
+        } else if(analysis) {
+          currentFeedback = analysis.msg;
+        }
+        lastFeedbackTime = currentTime;
+      }
+      
+      // Display the stable feedback
+      document.getElementById("feedback").textContent = currentFeedback;
+    }
+
+    rafID = requestAnimationFrame(render);
+  }
+
+  document.getElementById("startBtn").onclick = async () => {
+    document.getElementById("feedback").textContent = "Loading model...";
+    await loadModel();
+    await startVideo();
+    running = true;
+    lastFeedbackTime = Date.now(); // Reset timer on start
+    document.getElementById("startBtn").disabled = true;
+    document.getElementById("stopBtn").disabled = false;
+    render();
+  };
+
+  document.getElementById("stopBtn").onclick = () => {
+    running = false;
+    cancelAnimationFrame(rafID);
+    const tracks = video.srcObject?.getTracks();
+    tracks?.forEach(t => t.stop());
+    video.srcObject = null;
+    ctx.clearRect(0,0,640,480);
+    document.getElementById("startBtn").disabled = false;
+    document.getElementById("stopBtn").disabled = true;
+    document.getElementById("feedback").textContent = "Assessment stopped.";
+  };
+
+})();
+</script>
+
+</body>
+</html>

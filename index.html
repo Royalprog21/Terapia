@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    :root {
+      --bg-color: #f5f7fa;
+      --card-bg: #fff;
+      --text-color: #333;
+      --input-bg: #fff;
+      --input-border: #ccc;
+      --btn-bg: #28a745;
+      --btn-hover: #1e7e34;
+      --link-color: #007BFF;
+    }
+
+    body.dark {
+      --bg-color: #1e1e2f;
+      --card-bg: #2a2a3d;
+      --text-color: #f0f0f0;
+      --input-bg: #3b3b52;
+      --input-border: #555;
+      --btn-bg: #3ac77a;
+      --btn-hover: #2e9f60;
+      --link-color: #4f8cff;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      transition: background 0.3s;
+    }
+
+    .register-container {
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 380px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .register-container h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: var(--text-color);
+    }
+
+    .register-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+
+    .register-container input,
+    .register-container select {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      transition: all 0.3s;
+    }
+
+    .register-container input:focus,
+    .register-container select:focus {
+      border-color: var(--btn-bg);
+      outline: none;
+    }
+
+    .register-container button {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--btn-bg);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .register-container button:hover {
+      background: var(--btn-hover);
+    }
+
+    .extra-links {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .extra-links a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .extra-links a:hover {
+      text-decoration: underline;
+    }
+
+    .toggle-theme {
+      display: block;
+      margin: 1rem auto 0;
+      background: transparent;
+      border: 1px solid var(--btn-bg);
+      border-radius: 20px;
+      padding: 0.4rem 1rem;
+      color: var(--btn-bg);
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .toggle-theme:hover {
+      background: var(--btn-bg);
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h2>Create Account</h2>
+    <form action="backend/register.php" method="POST">
+
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" placeholder="Full Name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Password" required>
+
+      <label for="role">Role</label>
+      <select id="role" name="role">
+        <option value="patient">Patient</option>
+        <option value="doctor">Doctor</option>
+      </select>
+
+      <button type="submit">Register</button>
+    </form>
+    <div class="extra-links">
+      <a href="login.html">Already have an account? Login</a>
+    </div>
+    <button class="toggle-theme" id="themeToggle">🌙 Dark Mode</button>
+  </div>
+
+  <script>
+    const toggleBtn = document.getElementById('themeToggle');
+    toggleBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      toggleBtn.textContent = document.body.classList.contains('dark') 
+        ? "☀️ Light Mode" 
+        : "🌙 Dark Mode";
+    });
+  </script>
+</body>
+</html>
