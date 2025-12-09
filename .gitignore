@@ -1,6 +1,17 @@
+# dependencies
 node_modules/
+
+# build outputs
 dist/
+build/
+
+# environment
 .env
+
+# mac / editor noise
 .DS_Store
+.vscode/
+
+# npm logs
 npm-debug.log*
 yarn-error.log*
